@@ -210,49 +210,60 @@ static void * const keypath = (void*)&keypath;
     switch (animationType) {
         case MJPopupViewAnimationSlideBottomTop:
         case MJPopupViewAnimationSlideBottomBottom:
-            popupStartRect = CGRectMake((sourceSize.width - popupSize.width) / 2,
+            popupStartRect = CGRectIntegral(CGRectMake((sourceSize.width - popupSize.width) / 2,
                                         sourceSize.height,
                                         popupSize.width,
-                                        popupSize.height);
+                                        popupSize.height));
+            
             
             break;
         case MJPopupViewAnimationSlideLeftLeft:
         case MJPopupViewAnimationSlideLeftRight:
-            popupStartRect = CGRectMake(-sourceSize.width,
+            popupStartRect = CGRectIntegral(CGRectMake(-sourceSize.width,
                                         (sourceSize.height - popupSize.height) / 2,
                                         popupSize.width,
-                                        popupSize.height);
+                                        popupSize.height));
+           
             break;
             
         case MJPopupViewAnimationSlideTopTop:
         case MJPopupViewAnimationSlideTopBottom:
-            popupStartRect = CGRectMake((sourceSize.width - popupSize.width) / 2,
+            popupStartRect = CGRectIntegral(CGRectMake((sourceSize.width - popupSize.width) / 2,
                                         -popupSize.height,
                                         popupSize.width,
-                                        popupSize.height);
+                                        popupSize.height));
+           
             break;
             
         default:
-            popupStartRect = CGRectMake(sourceSize.width,
+            popupStartRect = CGRectIntegral(CGRectMake(sourceSize.width,
                                         (sourceSize.height - popupSize.height) / 2,
                                         popupSize.width,
-                                        popupSize.height);
+                                        popupSize.height));
+            
             break;
     }
-    CGRect popupEndRect = CGRectMake((sourceSize.width - popupSize.width) / 2,
+    CGRect popupEndRect = CGRectIntegral(CGRectMake((sourceSize.width - popupSize.width) / 2,
                                      (sourceSize.height - popupSize.height) / 2,
                                      popupSize.width,
-                                     popupSize.height);
+                                     popupSize.height));
+   
     
     // Set starting properties
     popupView.frame = popupStartRect;
     popupView.alpha = 1.0f;
+    
+    UIWindow* w = [UIApplication sharedApplication].keyWindow;
+    w.userInteractionEnabled = NO;
+    
     [UIView animateWithDuration:kPopupModalAnimationDuration delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
         [self.mj_popupViewController viewWillAppear:NO];
         self.mj_popupBackgroundView.alpha = 1.0f;
         popupView.frame = popupEndRect;
     } completion:^(BOOL finished) {
         [self.mj_popupViewController viewDidAppear:NO];
+        
+        w.userInteractionEnabled = YES;
     }];
 }
 
@@ -265,32 +276,38 @@ static void * const keypath = (void*)&keypath;
     switch (animationType) {
         case MJPopupViewAnimationSlideBottomTop:
         case MJPopupViewAnimationSlideTopTop:
-            popupEndRect = CGRectMake((sourceSize.width - popupSize.width) / 2,
+            popupEndRect = CGRectIntegral(CGRectMake((sourceSize.width - popupSize.width) / 2,
                                       -popupSize.height,
                                       popupSize.width,
-                                      popupSize.height);
+                                      popupSize.height));
+            
             break;
         case MJPopupViewAnimationSlideBottomBottom:
         case MJPopupViewAnimationSlideTopBottom:
-            popupEndRect = CGRectMake((sourceSize.width - popupSize.width) / 2,
+            popupEndRect = CGRectIntegral(CGRectMake((sourceSize.width - popupSize.width) / 2,
                                       sourceSize.height,
                                       popupSize.width,
-                                      popupSize.height);
+                                      popupSize.height));
+            
             break;
         case MJPopupViewAnimationSlideLeftRight:
         case MJPopupViewAnimationSlideRightRight:
-            popupEndRect = CGRectMake(sourceSize.width,
+            popupEndRect = CGRectIntegral(CGRectMake(sourceSize.width,
                                       popupView.frame.origin.y,
                                       popupSize.width,
-                                      popupSize.height);
+                                      popupSize.height));
+            
             break;
         default:
-            popupEndRect = CGRectMake(-popupSize.width,
+            popupEndRect = CGRectIntegral(CGRectMake(-popupSize.width,
                                       popupView.frame.origin.y,
                                       popupSize.width,
-                                      popupSize.height);
+                                      popupSize.height));
             break;
     }
+    
+    UIWindow* w = [UIApplication sharedApplication].keyWindow;
+    w.userInteractionEnabled = NO;
     
     [UIView animateWithDuration:kPopupModalAnimationDuration delay:0.0f options:UIViewAnimationOptionCurveEaseIn animations:^{
         [self.mj_popupViewController viewWillDisappear:NO];
@@ -301,6 +318,8 @@ static void * const keypath = (void*)&keypath;
         [overlayView removeFromSuperview];
         [self.mj_popupViewController viewDidDisappear:NO];
         self.mj_popupViewController = nil;
+        
+        w.userInteractionEnabled = YES;
         
         id dismissed = [self dismissedCallback];
         if (dismissed != nil)
@@ -318,10 +337,10 @@ static void * const keypath = (void*)&keypath;
     // Generating Start and Stop Positions
     CGSize sourceSize = sourceView.bounds.size;
     CGSize popupSize = popupView.bounds.size;
-    CGRect popupEndRect = CGRectMake((sourceSize.width - popupSize.width) / 2,
+    CGRect popupEndRect = CGRectIntegral(CGRectMake((sourceSize.width - popupSize.width) / 2,
                                      (sourceSize.height - popupSize.height) / 2,
                                      popupSize.width,
-                                     popupSize.height);
+                                     popupSize.height));
     
     // Set starting properties
     popupView.frame = popupEndRect;
